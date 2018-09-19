@@ -45,8 +45,8 @@
 			</div><!--.row-->
 		</form>
 		<ul>
-		{{--@foreach($load->vehicles() as $vehicle)--}}
-			{{--<li class="form-control btn-warning">$vehicle['VRM']</li>--}}
-		{{--@endforeach--}}
+		@foreach(Session::get('load')->vehicles as $vehicle)
+			<li class="form-control btn-warning">{{ $vehicle->VRM }}</li>
+		@endforeach
 		</ul>
 @endsection
