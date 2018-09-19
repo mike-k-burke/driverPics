@@ -2,105 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Driver;
 use App\Load;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
-class LoadController extends Controller
+class LoadController extends ResourceController
 {
-    /**
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('load.index') -> with(['loads' => Load::all()]);
+    protected $resource = 'load';
+
+    public function __construct(Load $record) {
+        parent::__construct($record);
     }
 
     /**
-     * @return \Illuminate\Http\Response
+     * Show the form for creating a new resource.
+     *
+     * @return View
      */
     public function create()
     {
-        $drivers = \App\Driver::pluck('name', 'id');
-        return view('load.create') -> with(['drivers' => $drivers]); 
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $load = new Load;
-        $load -> pickup_postcode = $request -> get('pickup_postcode');
-        $load -> dropoff_postcode = $request -> get('dropoff_postcode');
-        $load -> driver_id = $request -> get('driver_id');
-        $load -> save();
-
-        Session::put('load', $load);
-
-        return redirect("/vehicles/create");
-    }
-    
-    public function add(Request $request, $id)
-    {
-        $load = Load::whereId($id)->first();
-
-        Session::put('load', $load);
-
-        return redirect("/vehicles/create");
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Load  $load
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Load $load)
-    {
-        //
+        $drivers = Driver::pluck('name', 'id');
+        return view($this->resource . '.create')->with(compact('drivers'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Load  $load
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return Response
      */
-    public function edit(Load $load)
+    public function edit($id)
     {
-        $drivers = \App\Driver::pluck('name', 'id');
-        return view('load.edit') -> with(['load' => $load, 'drivers' => $drivers]);
+        $record = $this->model->find($id);
+        $drivers = Driver::pluck('name', 'id');
+        return view($this->resource . '.edit')->with(compact('record', 'drivers'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Load  $load
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return RedirectResponse
      */
-    public function update(Request $request, Load $load)
+    public function store(Request $request)
     {
-        $load -> pickup_postcode = $request -> get('pickup_postcode');
-        $load -> dropoff_postcode = $request -> get('dropoff_postcode');
-        $load -> driver_id = $request -> get('driver_id');
-        $load -> save();
-        return redirect('loads') -> with('success', 'The Load has been updated');
+        $record = $this->model->create($request->all());
+        Session::put('load', $record);
+        return redirect(route('vehicle.create'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Add a load to a session for when adding a vehicle to that load.
      *
-     * @param  \App\Load  $load
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return RedirectResponse
      */
-    public function destroy(Load $load)
+    public function add($id)
     {
-        $load -> delete();
-        return redirect('loads') -> with('success', 'The Load has been deleted');
+        $record = $this->model->find($id);
+        Session::put('load', $record);
+        return redirect(route('vehicle.create'));
     }
 }

@@ -9,16 +9,16 @@
 				<th colspan="2">Actions</th>
 			</thead>
 			<tbody>
-				@foreach($vehicles as $vehicle)
+				@foreach($records as $record)
 				<tr>
-					<td>{{ $vehicle['id'] }}</td>
-					<td>{{ $vehicle -> loadd['pickup_postcode'] }}</td>
-					<td>{{ $vehicle['VRM'] }}</td>
+					<td>{{ $record->id }}</td>
+					<td>{{ $record->vehicle_load->pickup_postcode }}</td>
+					<td>{{ $record->VRM }}</td>
 					<td>
-						<a href="{{ action('VehicleController@edit', $vehicle) }}" class="btn btn-warning">Edit</a>
+						<a href="{{ route('vehicle.edit', [$record->id]) }}" class="btn btn-warning">Edit</a>
 					</td>
 					<td>
-						<form method="POST" action="{{ action('VehicleController@destroy', $vehicle) }}">
+						<form method="POST" action="{{ route('vehicle.destroy', [$record->id]) }}">
 							@csrf
 							<input type="hidden" name="_method" value="DELETE">
 							<button type="submit" class="btn btn-danger">Delete</button>
@@ -29,6 +29,6 @@
 			</tbody>
 		</table>
 
-		{{ $vehicles -> links() }}
+		{{ $records->links() }}
 
 @endsection

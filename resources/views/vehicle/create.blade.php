@@ -1,7 +1,7 @@
 @extends('app')
 @section('content')
-		<h2>Create Vehicle for load to {{Session::get('load')['dropoff_postcode']}}</h2>
-		<form method="POST" action="{{ url('/vehicles') }}" enctype="multipart/form-data">
+		<h2>Create Vehicle for load to {{ Session::get('load')->dropoff_postcode }}</h2>
+		<form method="POST" action="{{ route('vehicle.store') }}" enctype="multipart/form-data">
 			@csrf
 			<div class="row">
 				<div class="form-group col-md-4">
@@ -35,7 +35,7 @@
 			</div><!--.row-->
 			<div class="row">
 				<div class="form-group">
-					<input type="hidden" name="load_id" value="{{Session::get('load')['id']}}">
+					<input type="hidden" name="load_id" value="{{ Session::get('load')->id }}">
 				</div>
 			</div>
 			<div class="row">
@@ -45,8 +45,8 @@
 			</div><!--.row-->
 		</form>
 		<ul>
-		@foreach($load->vehicles() as $vehicle)
-			<li class="form-control btn-warning">$vehicle['VRM']</li>
-		@endforeach
+		{{--@foreach($load->vehicles() as $vehicle)--}}
+			{{--<li class="form-control btn-warning">$vehicle['VRM']</li>--}}
+		{{--@endforeach--}}
 		</ul>
 @endsection

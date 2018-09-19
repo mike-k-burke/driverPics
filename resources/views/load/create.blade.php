@@ -1,7 +1,7 @@
 @extends('app')
 @section('content')
 		<h2>Create Load</h2>
-		<form method="POST" action="{{ url('loads') }}" enctype="multipart/form-data">
+		<form method="POST" action="{{ route('load.store')}}" enctype="multipart/form-data">
 			@csrf
 			<div class="row">
 				<div class="form-group col-md-4">
